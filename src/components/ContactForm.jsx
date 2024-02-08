@@ -3,13 +3,15 @@ import css from './ContactForm.module.css';
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from './redux/Contacts/contactsReducer';
+import { useEffect } from 'react';
+import { apiAddNewContact } from './redux/Contacts/contactsReducer';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(store => store.contacts.contacts.items);
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setNumber] = useState('');
+  const [newContact, setNewContact] = useState(null);
   const handleChange = event => {
     const nameValue = event.target.value.trim();
     setName(nameValue);
@@ -19,6 +21,12 @@ const ContactForm = () => {
     const numberValue = event.target.value;
     setNumber(numberValue);
   };
+
+  useEffect(() => {
+    if (newContact) {
+      dispatch(apiAddNewContact(newContact));
+    }
+  }, [dispatch, newContact]);
 
   const onAddClick = event => {
     event.preventDefault();
@@ -34,13 +42,13 @@ const ContactForm = () => {
       return;
     }
 
-    const newContact = {
+    const contactToAdd = {
       id: nanoid(),
       name,
-      number,
+      phone,
     };
 
-    dispatch(addContact(newContact));
+    setNewContact(contactToAdd);
 
     event.currentTarget.reset();
   };

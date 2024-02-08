@@ -7,6 +7,7 @@ const Filter = () => {
     const filterValue = event.target.value;
     dispatch(setFilter(filterValue));
   };
+
   return (
     <div>
       <p>
